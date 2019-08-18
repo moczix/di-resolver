@@ -6,6 +6,10 @@
   "module": "dist/index.esm.js",
   "browser": "dist/index.umd.js",
   "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/moczix/di-resolver.git"
+  },
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
