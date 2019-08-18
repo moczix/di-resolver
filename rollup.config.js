@@ -18,6 +18,22 @@ export default [
 			typescript() // so Rollup can convert TypeScript to JavaScript
 		]
 	},
+	{
+		input: 'src/main.ts',
+		output: {
+			name: 'DiResolver',
+			file: pkg.browserBazel,
+			format: 'umd',
+			amd: {
+				id: 'di-resolver'
+			}
+		},
+		plugins: [
+			resolve(),   // so Rollup can find `ms`
+			commonjs(),  // so Rollup can convert `ms` to an ES module
+			typescript() // so Rollup can convert TypeScript to JavaScript
+		]
+	},
 
 	// CommonJS (for Node) and ES module (for bundlers) build.
 	// (We could have three entries in the configuration array
