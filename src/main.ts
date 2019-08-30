@@ -110,6 +110,10 @@ class DiContainer {
     return new ctor(...resolvedDeps);
   }
 
+  public getSingletonInstance(ctor: any): any {
+    return this.singletons.find(singleton => singleton instanceof ctor);
+  }
+
   public resolveTesting(ctor: any, providers?: TestProviders[]): any {
     const provider = this.providers.find(provider => provider.ctor === ctor);
     if (!provider) {
@@ -138,6 +142,10 @@ export class DiResolver {
   
   public static resolve<T>(className: Function): T {
     return DiContainer.getInstance().resolve(className);
+  }
+
+  public static getSingletonInstance<T>(className: Function): T {
+    return DiContainer.getInstance().getSingletonInstance(className);
   }
 
   public static resolveTesting<T>(className: Function, providers?: TestProviders[]): T {

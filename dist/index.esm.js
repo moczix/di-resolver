@@ -85,6 +85,9 @@ var DiContainer = /** @class */ (function () {
         var resolvedDeps = this.resolveDeps(provider.deps);
         return new (ctor.bind.apply(ctor, [void 0].concat(resolvedDeps)))();
     };
+    DiContainer.prototype.getSingletonInstance = function (ctor) {
+        return this.singletons.find(function (singleton) { return singleton instanceof ctor; });
+    };
     DiContainer.prototype.resolveTesting = function (ctor, providers) {
         var provider = this.providers.find(function (provider) { return provider.ctor === ctor; });
         if (!provider) {
@@ -110,6 +113,9 @@ var DiResolver = /** @class */ (function () {
     };
     DiResolver.resolve = function (className) {
         return DiContainer.getInstance().resolve(className);
+    };
+    DiResolver.getSingletonInstance = function (className) {
+        return DiContainer.getInstance().getSingletonInstance(className);
     };
     DiResolver.resolveTesting = function (className, providers) {
         return DiContainer.getInstance().resolveTesting(className, providers);

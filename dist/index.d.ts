@@ -8,6 +8,7 @@ export declare class DiResolver {
     static registerSingleton(ctor: Function, deps: Function[]): void;
     static registerLazySingleton(ctor: Function, deps: Function[]): void;
     static resolve<T>(className: Function): T;
+    static getSingletonInstance<T>(className: Function): T;
     static resolveTesting<T>(className: Function, providers?: TestProviders[]): T;
     static registerClassAsSingleton(instance: any): void;
 }
