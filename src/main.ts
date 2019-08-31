@@ -153,6 +153,10 @@ export class DiResolver {
     return DiContainer.getInstance().resolveVar(key);
   }
 
+  public static setVar<T>(key: string, value: T): void {
+    DiContainer.getInstance().registerVar(key, value);
+  }
+
   public static resolveTesting<T>(className: Function, providers?: TestProviders[]): T {
     return DiContainer.getInstance().resolveTesting(className, providers);
   }

@@ -125,6 +125,9 @@ var DiResolver = /** @class */ (function () {
     DiResolver.resolveVar = function (key) {
         return DiContainer.getInstance().resolveVar(key);
     };
+    DiResolver.setVar = function (key, value) {
+        DiContainer.getInstance().registerVar(key, value);
+    };
     DiResolver.resolveTesting = function (className, providers) {
         return DiContainer.getInstance().resolveTesting(className, providers);
     };
