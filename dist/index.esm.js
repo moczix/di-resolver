@@ -3,6 +3,7 @@ var DiContainer = /** @class */ (function () {
         this.singletons = [];
         this.lazySingletons = [];
         this.providers = [];
+        this.vars = {};
     }
     DiContainer.getInstance = function () {
         if (!DiContainer.instance) {
@@ -25,6 +26,9 @@ var DiContainer = /** @class */ (function () {
     };
     DiContainer.prototype.registerClassAsSingleton = function (instance) {
         this.singletons.push(instance);
+    };
+    DiContainer.prototype.registerVar = function (key, value) {
+        this.vars[key] = value;
     };
     DiContainer.prototype.resolveSingleton = function (dep) {
         // Singleton instance is created at registration time
@@ -85,9 +89,6 @@ var DiContainer = /** @class */ (function () {
         var resolvedDeps = this.resolveDeps(provider.deps);
         return new (ctor.bind.apply(ctor, [void 0].concat(resolvedDeps)))();
     };
-    DiContainer.prototype.getSingletonInstance = function (ctor) {
-        return this.singletons.find(function (singleton) { return singleton instanceof ctor; });
-    };
     DiContainer.prototype.resolveTesting = function (ctor, providers) {
         var provider = this.providers.find(function (provider) { return provider.ctor === ctor; });
         if (!provider) {
@@ -96,6 +97,9 @@ var DiContainer = /** @class */ (function () {
         }
         var resolvedDeps = this.resolveDeps(provider.deps, providers);
         return new (ctor.bind.apply(ctor, [void 0].concat(resolvedDeps)))();
+    };
+    DiContainer.prototype.resolveVar = function (key) {
+        return this.vars[key];
     };
     return DiContainer;
 }());
@@ -114,8 +118,8 @@ var DiResolver = /** @class */ (function () {
     DiResolver.resolve = function (className) {
         return DiContainer.getInstance().resolve(className);
     };
-    DiResolver.getSingletonInstance = function (className) {
-        return DiContainer.getInstance().getSingletonInstance(className);
+    DiResolver.resolveVar = function (key) {
+        return DiContainer.getInstance().resolveVar(key);
     };
     DiResolver.resolveTesting = function (className, providers) {
         return DiContainer.getInstance().resolveTesting(className, providers);
