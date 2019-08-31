@@ -17,6 +17,7 @@ class DiContainer {
   private singletons: Function[] = [];
   private lazySingletons: Registration[] = [];
   private providers: Registration[] = [];
+  private vars: {[key: string]: any} = {};
 
   private static instance: DiContainer;
   private constructor() {
@@ -46,6 +47,10 @@ class DiContainer {
 
   public registerClassAsSingleton(instance: any): void {
     this.singletons.push(instance);
+  }
+
+  public registerVar(key: string, value: any): void {
+    this.vars[key] = value;
   }
 
   private resolveSingleton(dep: Function): Function {
@@ -110,10 +115,6 @@ class DiContainer {
     return new ctor(...resolvedDeps);
   }
 
-  public getSingletonInstance(ctor: any): any {
-    return this.singletons.find(singleton => singleton instanceof ctor);
-  }
-
   public resolveTesting(ctor: any, providers?: TestProviders[]): any {
     const provider = this.providers.find(provider => provider.ctor === ctor);
     if (!provider) {
@@ -122,6 +123,10 @@ class DiContainer {
     }
     const resolvedDeps = this.resolveDeps(provider.deps, providers);
     return new ctor(...resolvedDeps);
+  }
+
+  public resolveVar<T>(key: string): T {
+    return this.vars[key];
   }
 }
 
@@ -144,8 +149,8 @@ export class DiResolver {
     return DiContainer.getInstance().resolve(className);
   }
 
-  public static getSingletonInstance<T>(className: Function): T {
-    return DiContainer.getInstance().getSingletonInstance(className);
+  public static resolveVar<T>(key: string): T {
+    return DiContainer.getInstance().resolveVar(key);
   }
 
   public static resolveTesting<T>(className: Function, providers?: TestProviders[]): T {
