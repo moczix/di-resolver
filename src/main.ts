@@ -18,6 +18,7 @@ class DiContainer {
   private lazySingletons: Registration[] = [];
   private providers: Registration[] = [];
   private vars: {[key: string]: any} = {};
+  private testMode: boolean = false;
 
   private static instance: DiContainer;
   private constructor() {
@@ -128,6 +129,18 @@ class DiContainer {
   public resolveVar<T>(key: string): T {
     return this.vars[key];
   }
+
+  public enableTestMode(): void {
+    this.testMode = true;
+  }
+
+  public disableTestMode(): void {
+    this.testMode = false;
+  }
+
+  public isTestModeEnable(): boolean {
+    return this.testMode;
+  }
 }
 
 
@@ -164,6 +177,22 @@ export class DiResolver {
   public static registerClassAsSingleton(instance: any): void {
     DiContainer.getInstance().registerClassAsSingleton(instance);
   }
+
+  public static enableTestMode(): void {
+    DiContainer.getInstance().enableTestMode();
+  }
+
+  public static disableTestMode(): void {
+    DiContainer.getInstance().disableTestMode();
+  }
+
+  public static isTestModeDisabled(): boolean {
+    return !DiContainer.getInstance().isTestModeEnable();
+  }
+
+  public static isTestModeEnable(): boolean {
+    return DiContainer.getInstance().isTestModeEnable();
+  }
 }
 
 export function Provide(deps: Function[] = []) {
@@ -187,8 +216,16 @@ export function LazySingleton(deps: Function[] = []) {
   }
 }
 
+export function enableTestMode(): void {
+  DiResolver.enableTestMode();
+}
+
+export function disableTestMode(): void {
+  DiResolver.disableTestMode();
+}
+
 function checkParamsIsCorrect(ctor: Function, deps: Function[], decoratorName: string): void {
-  if (Reflect && Reflect.getMetadata) {
+  if (Reflect && Reflect.getMetadata && DiResolver.isTestModeDisabled()) {
     const params: any[] = Reflect.getMetadata("design:paramtypes", ctor) || [];
     if (deps.length !== params.length) {
       console.error('WRONG LENGTH OF DEPS FOR CLASS (check decorator and constructor)', ctor);

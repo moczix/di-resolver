@@ -10,6 +10,7 @@
           this.lazySingletons = [];
           this.providers = [];
           this.vars = {};
+          this.testMode = false;
       }
       DiContainer.getInstance = function () {
           if (!DiContainer.instance) {
@@ -107,6 +108,15 @@
       DiContainer.prototype.resolveVar = function (key) {
           return this.vars[key];
       };
+      DiContainer.prototype.enableTestMode = function () {
+          this.testMode = true;
+      };
+      DiContainer.prototype.disableTestMode = function () {
+          this.testMode = false;
+      };
+      DiContainer.prototype.isTestModeEnable = function () {
+          return this.testMode;
+      };
       return DiContainer;
   }());
   var DiResolver = /** @class */ (function () {
@@ -136,6 +146,15 @@
       DiResolver.registerClassAsSingleton = function (instance) {
           DiContainer.getInstance().registerClassAsSingleton(instance);
       };
+      DiResolver.enableTestMode = function () {
+          DiContainer.getInstance().enableTestMode();
+      };
+      DiResolver.disableTestMode = function () {
+          DiContainer.getInstance().disableTestMode();
+      };
+      DiResolver.isTestModeDisabled = function () {
+          return DiContainer.getInstance().isTestModeEnable();
+      };
       return DiResolver;
   }());
   function Provide(deps) {
@@ -159,8 +178,10 @@
           DiResolver.registerLazySingleton(ctor, deps);
       };
   }
+  function enableTestMode() {
+  }
   function checkParamsIsCorrect(ctor, deps, decoratorName) {
-      if (Reflect && Reflect.getMetadata) {
+      if (Reflect && Reflect.getMetadata && DiResolver.isTestModeDisabled()) {
           var params_1 = Reflect.getMetadata("design:paramtypes", ctor) || [];
           if (deps.length !== params_1.length) {
               console.error('WRONG LENGTH OF DEPS FOR CLASS (check decorator and constructor)', ctor);
@@ -182,6 +203,7 @@
   exports.LazySingleton = LazySingleton;
   exports.Provide = Provide;
   exports.Singleton = Singleton;
+  exports.enableTestMode = enableTestMode;
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
