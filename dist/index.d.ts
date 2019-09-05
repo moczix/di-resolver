@@ -15,9 +15,11 @@ export declare class DiResolver {
     static enableTestMode(): void;
     static disableTestMode(): void;
     static isTestModeDisabled(): boolean;
+    static isTestModeEnable(): boolean;
 }
 export declare function Provide(deps?: Function[]): (ctor: Function) => void;
 export declare function Singleton(deps?: Function[]): (ctor: Function) => void;
 export declare function LazySingleton(deps?: Function[]): (ctor: Function) => void;
 export declare function enableTestMode(): void;
+export declare function disableTestMode(): void;
 export {};

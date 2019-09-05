@@ -151,6 +151,9 @@ var DiResolver = /** @class */ (function () {
         DiContainer.getInstance().disableTestMode();
     };
     DiResolver.isTestModeDisabled = function () {
+        return !DiContainer.getInstance().isTestModeEnable();
+    };
+    DiResolver.isTestModeEnable = function () {
         return DiContainer.getInstance().isTestModeEnable();
     };
     return DiResolver;
@@ -177,6 +180,10 @@ function LazySingleton(deps) {
     };
 }
 function enableTestMode() {
+    DiResolver.enableTestMode();
+}
+function disableTestMode() {
+    DiResolver.disableTestMode();
 }
 function checkParamsIsCorrect(ctor, deps, decoratorName) {
     if (Reflect && Reflect.getMetadata && DiResolver.isTestModeDisabled()) {
@@ -201,4 +208,5 @@ exports.DiResolver = DiResolver;
 exports.LazySingleton = LazySingleton;
 exports.Provide = Provide;
 exports.Singleton = Singleton;
+exports.disableTestMode = disableTestMode;
 exports.enableTestMode = enableTestMode;
